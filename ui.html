@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>lumino | Ultra-Modern Digital Studio</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Sora:wght@100;300;400;600;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-deep: #050505;
+            --accent-primary: #8B5CF6;
+            --accent-secondary: #06B6D4;
+            --glass: rgba(255, 255, 255, 0.03);
+            --glass-border: rgba(255, 255, 255, 0.08);
+        }
+
+        * {
+            cursor: none;
+            scrollbar-width: none;
+        }
+        *::-webkit-scrollbar { display: none; }
+
+        body {
+            background-color: var(--bg-deep);
+            color: #ffffff;
+            font-family: 'Sora', sans-serif;
+            overflow-x: hidden;
+        }
+
+        .custom-cursor {
+            width: 20px;
+            height: 20px;
+            background: white;
+            border-radius: 50%;
+            position: fixed;
+            pointer-events: none;
+            z-index: 9999;
+            mix-blend-mode: difference;
+            transition: transform 0.1s ease;
+        }
+
+        .glass-card {
+            background: var(--glass);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+        }
+
+        .noise-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: url('https://grainy-gradients.vercel.app/noise.svg');
+            opacity: 0.05;
+            pointer-events: none;
+            z-index: 50;
+        }
+
+        .glow-mesh {
+            position: absolute;
+            width: 60px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(139, 92, 246, 0.15) 0%, transparent 70%);
+            filter: blur(80px);
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .project-grid {
+            display: grid;
+            grid-template-columns: repeat(12, 1fr);
+            gap: 2rem;
+        }
+
+        .mockup-container {
+            position: relative;
+            perspective: 1000px;
+        }
+
+        .ui-element {
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .stagger-text span {
+            display: inline-block;
+            transform: translateY(100%);
+        }
+
+        .tag {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            padding: 4px 12px;
+            border-radius: 100px;
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .project-scroll-block {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            padding: 10vh 0;
+        }
+
+
+/* =========================
+   MOBILE RESPONSIVE PATCH
+   ========================= */
+ 
+    </style>
+</head>
+<body>
+    <div class="custom-cursor" id="cursor"></div>
+    <div class="noise-overlay"></div>
+
+    <!-- Background Elements -->
+    <div class="glow-mesh" style="top: 10%; left: -10%;"></div>
+    <div class="glow-mesh" style="bottom: 10%; right: -10%; background: radial-gradient(circle, rgba(6, 182, 212, 0.15) 0%, transparent 70%);"></div>
+
+    <!-- Navigation -->
+    <nav class="fixed top-0 left-0 w-full z-50 p-8 flex justify-between items-left mix-blend-difference">
+        <div class="text-xl font-extrabold tracking-tighter">lumino studio</div>
+        
+        <div class="flex gap-8 text-sm font-light tracking-widest uppercase">
+        
+            <a href="main.html" class="hover:opacity-50 transition">back </a>
+          
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="h-screen flex flex-col justify-center items-center text-center px-4">
+        <h1 class="text-[clamp(3rem,10vw,8rem)] font-extrabold leading-none tracking-tighter mb-6 overflow-hidden">
+            <div class="hero-title">DIGITAL<br><span class="text-transparent" style="-webkit-text-stroke: 1px white;">ALCHEMISTS</span></div>
+        </h1>
+        <p class="max-w-xl text-gray-400 text-lg md:text-xl font-light leading-relaxed opacity-0 hero-sub">
+            Engineering premium high-fidelity UX/UI experiences for the pioneers of 2025.
+        </p>
+        <div class="mt-12 opacity-0 hero-scroll-indicator">
+            <div class="w-[1px] h-24 bg-gradient-to-b from-white to-transparent mx-auto"></div>
+        </div>
+    </section>
+
+    <main class="container mx-auto px-6 lg:px-12" id="work">
+        
+        <!-- Project 1: Lumina Fintech -->
+        <section class="project-scroll-block">
+            <div class="project-grid w-full items-center">
+                <div class="col-span-12 lg:col-span-5 space-y-6">
+                    <div class="flex gap-3">
+                        <span class="tag">Fintech</span>
+                        <span class="tag">Banking</span>
+                    </div>
+                    <h2 class="text-5xl font-bold">Lumina Neo-Bank</h2>
+                    <div class="space-y-4 text-gray-400">
+                        <p class="text-white font-semibold uppercase text-xs tracking-widest">The Problem</p>
+                        <p>Gen-Z users found traditional banking apps visually cluttered and emotionally disconnected from their spending habits.</p>
+                        <p class="text-white font-semibold uppercase text-xs tracking-widest">The Solution</p>
+                        <ul class="list-disc list-inside space-y-2 text-sm">
+                            <li>Glassmorphic data visualization for instant clarity.</li>
+                            <li>AI-driven predictive budgeting widgets.</li>
+                            <li>Haptic-first mobile interactions for sensory feedback.</li>
+                        </ul>
+                    </div>
+                    <div class="glass-card p-6 mt-8">
+                        <p class="italic text-sm text-gray-300">"Agatsoma transformed our complex backend into a visual masterpiece that tripled our retention rate."</p>
+                        <p class="mt-4 text-xs font-bold">— Marcus Thorne, CEO Lumina</p>
+                    </div>
+                </div>
+                <div class="col-span-12 lg:col-span-7 flex justify-center items-center mockup-container py-12">
+                    <!-- Desktop Mockup Representation -->
+                    <div class="ui-element w-[80%] aspect-video glass-card overflow-hidden relative">
+                        <div class="absolute top-0 left-0 w-full h-8 bg-white/5 border-b border-white/10 flex items-center px-4 gap-2">
+                            <div class="w-2 h-2 rounded-full bg-red-500/50"></div>
+                            <div class="w-2 h-2 rounded-full bg-yellow-500/50"></div>
+                            <div class="w-2 h-2 rounded-full bg-green-500/50"></div>
+                        </div>
+                        <div class="p-8 pt-12">
+                            <div class="flex gap-4">
+                                <div class="w-1/3 h-32 bg-violet-500/20 rounded-xl border border-violet-500/30"></div>
+                                <div class="w-2/3 h-32 bg-cyan-500/20 rounded-xl border border-cyan-500/30"></div>
+                            </div>
+                            <div class="mt-4 w-full h-40 bg-white/5 rounded-xl border border-white/10"></div>
+                        </div>
+                    </div>
+                    <!-- Mobile Mockup Floating -->
+                    <div class="absolute -bottom-4 -right-4 w-40 h-80 glass-card ui-element overflow-hidden border-4 border-white/20">
+                        <div class="mt-8 px-4 space-y-4">
+                            <div class="w-full h-12 bg-violet-500/40 rounded-lg"></div>
+                            <div class="w-10 h-10 rounded-full bg-white/20"></div>
+                            <div class="space-y-2">
+                                <div class="w-full h-2 bg-white/10 rounded"></div>
+                                <div class="w-2/3 h-2 bg-white/10 rounded"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Project 2: Velocity Mobility -->
+        <section class="project-scroll-block">
+            <div class="project-grid w-full items-center">
+                <div class="col-span-12 lg:col-span-7 flex justify-center items-center mockup-container order-2 lg:order-1">
+                    <div class="ui-element w-[75%] h-[500px] glass-card overflow-hidden bg-gradient-to-br from-emerald-900/20 to-black p-4">
+                        <div class="flex h-full gap-4">
+                            <div class="w-20 h-full bg-white/5 rounded-2xl flex flex-col items-center py-6 gap-8">
+                                <div class="w-8 h-8 rounded-full bg-emerald-500"></div>
+                                <div class="w-6 h-6 bg-white/10 rounded"></div>
+                                <div class="w-6 h-6 bg-white/10 rounded"></div>
+                            </div>
+                            <div class="flex-1 space-y-4">
+                                <div class="w-full h-1/2 rounded-2xl bg-white/5 relative overflow-hidden">
+                                    <div class="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(16,185,129,0.2)_0%,transparent_70%)]"></div>
+                                </div>
+                                <div class="grid grid-cols-2 gap-4 h-[calc(50%-1rem)]">
+                                    <div class="bg-white/5 rounded-2xl"></div>
+                                    <div class="bg-white/5 rounded-2xl"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="absolute top-1/2 -left-8 -translate-y-1/2 w-48 h-96 glass-card ui-element bg-black/80 p-6 border-emerald-500/30">
+                         <div class="w-12 h-12 bg-emerald-500 rounded-full mb-6 blur-md opacity-50"></div>
+                         <h4 class="text-xl font-bold">98%</h4>
+                         <p class="text-[10px] uppercase text-emerald-500">Charge Level</p>
+                    </div>
+                </div>
+                <div class="col-span-12 lg:col-span-5 space-y-6 order-1 lg:order-2">
+                    <div class="flex gap-3">
+                        <span class="tag">Mobility</span>
+                        <span class="tag">EV Tech</span>
+                    </div>
+                    <h2 class="text-5xl font-bold">Velocity EV OS</h2>
+                    <div class="space-y-4 text-gray-400">
+                        <p class="text-white font-semibold uppercase text-xs tracking-widest">The Problem</p>
+                        <p>EV owners struggle with range anxiety and fragmented charging station networks during long-haul travel.</p>
+                        <p class="text-white font-semibold uppercase text-xs tracking-widest">The Solution</p>
+                        <ul class="list-disc list-inside space-y-2 text-sm">
+                            <li>Real-time telemetry integration with predictive range mapping.</li>
+                            <li>Single-tap universal charging payment gateway.</li>
+                            <li>Dark-optimized UI for reduced driver eye-fatigue.</li>
+                        </ul>
+                    </div>
+                    <div class="glass-card p-6 mt-8">
+                        <p class="italic text-sm text-gray-300">"The most intuitive cockpit interface we've ever tested. Agatsoma understands the future of driving."</p>
+                        <p class="mt-4 text-xs font-bold">— Elena Rossi, Head of UX at Velocity</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Project 3: Aura Health -->
+        <section class="project-scroll-block">
+            <div class="project-grid w-full items-center">
+                <div class="col-span-12 lg:col-span-5 space-y-6">
+                    <div class="flex gap-3">
+                        <span class="tag">Health</span>
+                        <span class="tag">Mental Wellness</span>
+                    </div>
+                    <h2 class="text-5xl font-bold">Aura Wellness</h2>
+                    <div class="space-y-4 text-gray-400">
+                        <p class="text-white font-semibold uppercase text-xs tracking-widest">The Problem</p>
+                        <p>Mental health apps often feel too clinical or overwhelming, discouraging consistent daily usage.</p>
+                        <p class="text-white font-semibold uppercase text-xs tracking-widest">The Solution</p>
+                        <ul class="list-disc list-inside space-y-2 text-sm">
+                            <li>Organic, fluid UI shapes that breathe and react to user heart rate.</li>
+                            <li>Minimalist "Zen Mode" navigation for zero distraction.</li>
+                            <li>Interactive 3D breathing guides built with ThreeJS.</li>
+                        </ul>
+                    </div>
+                    <div class="glass-card p-6 mt-8">
+                        <p class="italic text-sm text-gray-300">"Our user engagement spiked by 140% after the redesign. It’s more than an app; it’s a sanctuary."</p>
+                        <p class="mt-4 text-xs font-bold">— Dr. Sarah Chen, Founder of Aura</p>
+                    </div>
+                </div>
+                <div class="col-span-12 lg:col-span-7 flex justify-center items-center mockup-container py-12">
+                    <div class="ui-element w-[85%] aspect-video glass-card rounded-[40px] overflow-hidden bg-gradient-to-tr from-purple-900/30 to-rose-900/30 p-1">
+                        <div class="w-full h-full bg-[#050505]/80 rounded-[38px] flex items-center justify-center relative overflow-hidden">
+                            <div class="absolute w-64 h-64 bg-purple-500/20 blur-[80px] rounded-full animate-pulse"></div>
+                            <div class="z-10 text-center space-y-4">
+                                <div class="w-20 h-20 border-2 border-white/20 rounded-full mx-auto flex items-center justify-center">
+                                    <div class="w-12 h-12 bg-white rounded-full"></div>
+                                </div>
+                                <h3 class="text-2xl font-light">Breathe In</h3>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Project 4: Stellar Luxury -->
+        <section class="project-scroll-block">
+            <div class="project-grid w-full items-center">
+                <div class="col-span-12 lg:col-span-7 flex justify-center items-center mockup-container order-2 lg:order-1">
+                     <div class="grid grid-cols-2 gap-4 w-full">
+                        <div class="space-y-4">
+                            <div class="h-80 glass-card bg-white/5 flex items-end p-6 overflow-hidden relative">
+                                <div class="absolute inset-0 bg-gradient-to-t from-black to-transparent"></div>
+                                <span class="relative z-10 font-bold">Chronograph X</span>
+                            </div>
+                            <div class="h-40 glass-card bg-white/5 border-l-4 border-white/30 p-6">
+                                <p class="text-xs uppercase tracking-widest text-gray-500">Material</p>
+                                <p class="text-lg">Grade 5 Titanium</p>
+                            </div>
+                        </div>
+                        <div class="space-y-4 mt-12">
+                            <div class="h-40 glass-card bg-white/5 p-6 flex flex-col justify-center">
+                                <p class="text-3xl font-bold">$12,400</p>
+                                <button class="mt-2 text-[10px] uppercase border border-white/20 py-2 rounded-full">Reserve</button>
+                            </div>
+                            <div class="h-80 glass-card bg-white/5 overflow-hidden">
+                                <div class="w-full h-full bg-gradient-to-br from-white/10 to-transparent"></div>
+                            </div>
+                        </div>
+                     </div>
+                </div>
+                <div class="col-span-12 lg:col-span-5 space-y-6 order-1 lg:order-2">
+                    <div class="flex gap-3">
+                        <span class="tag">E-Commerce</span>
+                        <span class="tag">Luxury</span>
+                    </div>
+                    <h2 class="text-5xl font-bold">Stellar Timepieces</h2>
+                    <div class="space-y-4 text-gray-400">
+                        <p class="text-white font-semibold uppercase text-xs tracking-widest">The Problem</p>
+                        <p>Luxury watch collectors found standard e-commerce platforms too transactional and lacking high-end storytelling.</p>
+                        <p class="text-white font-semibold uppercase text-xs tracking-widest">The Solution</p>
+                        <ul class="list-disc list-inside space-y-2 text-sm">
+                            <li>Immersive editorial-style grid layouts with micro-interactions.</li>
+                            <li>High-definition zoom & 360-degree inspection modules.</li>
+                            <li>Concierge-link integration for private viewing appointments.</li>
+                        </ul>
+                    </div>
+                    <div class="glass-card p-6 mt-8">
+                        <p class="italic text-sm text-gray-300">"They didn't just build a shop; they built a digital flagship boutique that reflects our craftsmanship."</p>
+                        <p class="mt-4 text-xs font-bold">— Julian Vane, Marketing Director at Stellar</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Project 5: Nexus Studio -->
+        <section class="project-scroll-block">
+            <div class="project-grid w-full items-center">
+                <div class="col-span-12 lg:col-span-5 space-y-6">
+                    <div class="flex gap-3">
+                        <span class="tag">SaaS</span>
+                        <span class="tag">Creative Tool</span>
+                    </div>
+                    <h2 class="text-5xl font-bold">Nexus OS</h2>
+                    <div class="space-y-4 text-gray-400">
+                        <p class="text-white font-semibold uppercase text-xs tracking-widest">The Problem</p>
+                        <p>Creative directors struggle with switching between 5+ tools for project management, feedback, and asset delivery.</p>
+                        <p class="text-white font-semibold uppercase text-xs tracking-widest">The Solution</p>
+                        <ul class="list-disc list-inside space-y-2 text-sm">
+                            <li>Unified "Command Center" interface for all project stages.</li>
+                            <li>Integrated canvas for real-time visual feedback on assets.</li>
+                            <li>Automated client-facing progress reports.</li>
+                        </ul>
+                    </div>
+                    <div class="glass-card p-6 mt-8">
+                        <p class="italic text-sm text-gray-300">"Nexus consolidated our workflow, saving the studio over 20 hours a week in administrative overhead."</p>
+                        <p class="mt-4 text-xs font-bold">— Aris Thorne, Creative Director</p>
+                    </div>
+                </div>
+                <div class="col-span-12 lg:col-span-7 flex justify-center items-center mockup-container py-12">
+                    <div class="ui-element w-full aspect-video glass-card grid grid-cols-4 p-4 gap-4">
+                        <div class="col-span-1 bg-white/5 rounded-xl p-4 space-y-4">
+                             <div class="w-full h-8 bg-white/10 rounded-lg"></div>
+                             <div class="w-full h-24 bg-indigo-500/20 rounded-lg border border-indigo-500/30"></div>
+                             <div class="w-full h-24 bg-white/10 rounded-lg"></div>
+                        </div>
+                        <div class="col-span-2 bg-white/5 rounded-xl p-4 relative overflow-hidden">
+                             <div class="absolute top-4 right-4 w-12 h-12 bg-white/10 rounded-full"></div>
+                             <div class="mt-20 space-y-2">
+                                <div class="w-3/4 h-4 bg-white/20 rounded"></div>
+                                <div class="w-1/2 h-4 bg-white/10 rounded"></div>
+                             </div>
+                             <div class="mt-12 w-full h-32 bg-white/5 rounded-xl border border-white/10"></div>
+                        </div>
+                        <div class="col-span-1 bg-white/5 rounded-xl p-4 space-y-2">
+                            <div class="w-8 h-8 rounded-full bg-white/20 mx-auto"></div>
+                            <div class="w-8 h-8 rounded-full bg-white/20 mx-auto"></div>
+                            <div class="w-8 h-8 rounded-full bg-white/20 mx-auto"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="py-24 border-t border-white/10 mt-24">
+        <div class="container mx-auto px-12 text-center">
+            <h2 class="text-6xl md:text-9xl font-extrabold tracking-tighter mb-12">LET'S BUILD.</h2>
+            <div class="flex flex-wrap justify-center gap-8 text-lg font-light">
+                <a href="#" class="hover:text-purple-500 transition">Instagram</a>
+                <a href="#" class="hover:text-purple-500 transition">Dribbble</a>
+                <a href="#" class="hover:text-purple-500 transition">LinkedIn</a>
+                <a href="#" class="hover:text-purple-500 transition">Email</a>
+            </div>
+            <p class="mt-24 text-gray-600 text-xs tracking-widest">© 2025 AGATSOMA STUDIO. ALL RIGHTS RESERVED.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Custom Cursor
+        const cursor = document.getElementById('cursor');
+        document.addEventListener('mousemove', (e) => {
+            gsap.to(cursor, {
+                x: e.clientX - 10,
+                y: e.clientY - 10,
+                duration: 0.1
+            });
+        });
+
+        document.querySelectorAll('a, button').forEach(el => {
+            el.addEventListener('mouseenter', () => {
+                gsap.to(cursor, { scale: 3, opacity: 0.5 });
+            });
+            el.addEventListener('mouseleave', () => {
+                gsap.to(cursor, { scale: 1, opacity: 1 });
+            });
+        });
+
+        // Animations
+        gsap.registerPlugin(ScrollTrigger);
+
+        // Hero Animations
+        const tl = gsap.timeline();
+        tl.from('.hero-title', {
+            y: 200,
+            duration: 1.5,
+            ease: "power4.out",
+            stagger: 0.2
+        })
+        .to('.hero-sub', {
+            opacity: 1,
+            y: -20,
+            duration: 1
+        }, "-=0.5")
+        .to('.hero-scroll-indicator', {
+            opacity: 1,
+            y: -10,
+            duration: 1
+        }, "-=0.5");
+
+        // Scroll Parallax for Mockups
+        document.querySelectorAll('.mockup-container').forEach(container => {
+            gsap.from(container, {
+                scrollTrigger: {
+                    trigger: container,
+                    start: "top bottom",
+                    end: "bottom top",
+                    scrub: true
+                },
+                y: 100,
+                rotateX: -10,
+                opacity: 0.8
+            });
+        });
+
+        // Glass Card Reveal
+        document.querySelectorAll('.glass-card').forEach(card => {
+            gsap.from(card, {
+                scrollTrigger: {
+                    trigger: card,
+                    start: "top 90%",
+                },
+                y: 50,
+                opacity: 0,
+                duration: 1,
+                ease: "power3.out"
+            });
+        });
+
+        // Title reveals
+        document.querySelectorAll('h2').forEach(heading => {
+            gsap.from(heading, {
+                scrollTrigger: {
+                    trigger: heading,
+                    start: "top 85%",
+                },
+                x: -50,
+                opacity: 0,
+                duration: 1,
+                ease: "power4.out"
+            });
+        });
+
+    </script>
+</body>
+</html>

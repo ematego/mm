@@ -1,0 +1,835 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vespera • AI Atelier</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Inter:wght@400;500;600&display=swap');
+
+        body {
+            font-family: 'Inter', system_ui, sans-serif;
+        }
+        
+        .heading-font {
+            font-family: 'Playfair Display', serif;
+        }
+
+        .hero-bg {
+            background: radial-gradient(at center top, #1a1a1a 0%, #0a0a0a 70%);
+        }
+
+        .gold-glow {
+            box-shadow: 0 0 40px -10px rgb(234 179 8 / 0.3);
+        }
+
+        .emerald-glow {
+            box-shadow: 0 0 40px -10px rgb(52 211 153 / 0.3);
+        }
+
+        .nav-link {
+            position: relative;
+        }
+
+        .nav-link:after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 0;
+            height: 1px;
+            background: #eab308;
+            transition: width 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .nav-link:hover:after {
+            width: 100%;
+        }
+
+        .package-card {
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .package-card:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 25px 50px -12px rgb(0 0 0 / 0.4);
+        }
+
+        .benefit-icon {
+            transition: transform 0.2s ease;
+        }
+
+        .benefit:hover .benefit-icon {
+            transform: scale(1.2) rotate(3deg);
+        }
+
+        .testimonial {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.5s cubic-bezier(0.25, 0.1, 0.25, 1);
+        }
+
+        .testimonial.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .form-input {
+            transition: all 0.2s ease;
+        }
+
+        .form-input:focus {
+            border-color: #eab308;
+            box-shadow: 0 0 0 3px rgba(234, 179, 8, 0.1);
+            transform: scale(1.01);
+        }
+
+        .fixed-cta {
+            transition: all 0.3s ease;
+        }
+
+        .fixed-cta:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 15px -3px rgb(234 179 8 / 0.4);
+        }
+
+        .success-message {
+            animation: popIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+        }
+
+        @keyframes popIn {
+            from {
+                opacity: 0;
+                transform: scale(0.6) translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+        }
+
+        .scroll-progress {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 2px;
+            background: linear-gradient(to right, #eab308, #34d399);
+            z-index: 50;
+            transition: width 0.1s ease;
+        }
+    </style>
+</head>
+<body class="bg-zinc-950 text-zinc-200">
+    <!-- Scroll Progress -->
+    <div id="scroll-progress" class="scroll-progress w-0"></div>
+
+    <!-- Top Navigation -->
+    <nav class="fixed top-0 left-0 right-0 z-40 bg-zinc-950/80 backdrop-blur-xl border-b border-zinc-800">
+        <div class="max-w-screen-2xl mx-auto px-6 h-20 flex items-center justify-between">
+            <div class="flex items-center gap-x-3">
+                <div class="w-9 h-9 bg-gradient-to-br from-amber-400 to-emerald-400 rounded-xl flex items-center justify-center">
+                    <span class="text-zinc-950 text-2xl font-bold heading-font">V</span>
+                </div>
+                <div>
+                    <div class="heading-font text-2xl font-semibold tracking-tight">VESPERA</div>
+                    <div class="text-[10px] text-zinc-500 -mt-1.5 font-mono">AI ATELIER</div>
+                </div>
+            </div>
+
+            <div class="hidden md:flex items-center gap-x-10 text-sm uppercase tracking-widest font-medium">
+                <a href="#packages" class="nav-link cursor-pointer">PACKAGES</a>
+                <a href="#features" class="nav-link cursor-pointer">CRAFT</a>
+                <a href="#trust" class="nav-link cursor-pointer">LEGACY</a>
+                <a href="#order" class="nav-link cursor-pointer">ATELIER</a>
+            </div>
+
+            <div class="flex items-center gap-x-4">
+                <div class="hidden sm:block px-4 py-1.5 bg-zinc-900 rounded-full text-xs font-mono border border-zinc-800 flex items-center gap-x-2">
+                    <div class="w-1.5 h-1.5 bg-emerald-400 rounded-full animate-pulse"></div>
+                    STUDIO OPEN
+                </div>
+                <button onclick="toggleMobileMenu()" class="md:hidden w-10 h-10 flex items-center justify-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                    </svg>
+                </button>
+                <a href="#order" class="hidden md:block px-7 py-3 bg-amber-400 hover:bg-amber-300 transition-colors text-zinc-950 font-medium text-sm rounded-full">ENTER ATELIER</a>
+            </div>
+        </div>
+
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="hidden md:hidden fixed inset-0 bg-zinc-950 z-50 pt-20">
+            <div class="flex flex-col items-center gap-y-8 text-lg py-12">
+                <a href="#packages" onclick="toggleMobileMenu()" class="hover:text-amber-400 transition-colors">PACKAGES</a>
+                <a href="#features" onclick="toggleMobileMenu()" class="hover:text-amber-400 transition-colors">CRAFT</a>
+                <a href="#trust" onclick="toggleMobileMenu()" class="hover:text-amber-400 transition-colors">LEGACY</a>
+                <a href="#order" onclick="toggleMobileMenu()" class="hover:text-amber-400 transition-colors">ATELIER</a>
+                <div class="pt-6">
+                    <a href="#order" class="block px-8 py-4 bg-amber-400 text-zinc-950 font-medium rounded-full">ENTER ATELIER</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero-bg min-h-[100vh] flex items-center relative overflow-hidden">
+        <div class="absolute inset-0 bg-[radial-gradient(at_bottom_right,#eab30810_10%,transparent_50%)]"></div>
+        
+        <div class="max-w-screen-2xl mx-auto px-6 pt-32 pb-24 relative">
+            <div class="max-w-3xl">
+                <div class="inline-flex items-center gap-x-2 bg-zinc-900/80 backdrop-blur px-5 py-1.5 rounded-2xl mb-6 border border-zinc-800">
+                    <div class="px-2.5 py-0.5 bg-emerald-400 text-[10px] font-mono text-zinc-950 rounded">NEW</div>
+                    <div class="text-zinc-400 text-xs">AI x HUMAN CRAFTED VISUALS</div>
+                </div>
+
+                <div class="space-y-4">
+                    <h1 class="heading-font text-[92px] md:text-[120px] leading-[0.85] font-bold tracking-tighter text-white">
+                        AI-POWERED<br>LOGO, UI &amp;<br>VISUALS
+                    </h1>
+                    
+                    <div class="pl-1">
+                        <p class="text-2xl text-zinc-400 max-w-lg">Delivered in seven days.<br>With the precision of old world ateliers.</p>
+                        
+                        <div class="mt-10 flex items-center gap-8">
+                            <a href="#order" class="group inline-flex items-center gap-x-4 bg-white text-zinc-950 px-10 py-5 rounded-2xl hover:bg-amber-400 transition-all">
+                                <span class="font-medium tracking-wide">COMMENCE PROJECT</span>
+                                <div class="w-5 h-5 bg-zinc-950 rounded flex items-center justify-center group-hover:rotate-45 transition-transform">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="4">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M14 5l7 7-7 7" />
+                                    </svg>
+                                </div>
+                            </a>
+                            
+                            <div class="hidden sm:flex items-center gap-x-3 text-xs uppercase tracking-widest">
+                                <div class="h-px w-8 bg-zinc-700"></div>
+                                <div>OR CHAT WITH US</div>
+                                <div class="h-px w-8 bg-zinc-700"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Decorative Elements -->
+            <div class="absolute bottom-12 right-12 hidden lg:block">
+                <div class="relative w-72 h-72">
+                    <div class="absolute -top-6 -right-6 w-48 h-48 border border-amber-400/20 rounded-[4rem] rotate-12"></div>
+                    <div class="absolute bottom-8 left-4 w-56 h-56 border border-emerald-400/10 rounded-3xl -rotate-6"></div>
+                    
+                    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-px h-40 bg-gradient-to-b from-transparent via-amber-400/40 to-transparent"></div>
+                    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-40 h-px bg-gradient-to-r from-transparent via-emerald-400/40 to-transparent"></div>
+                </div>
+            </div>
+
+            <div class="absolute bottom-16 left-1/2 -translate-x-1/2 flex flex-col items-center gap-y-1 md:hidden">
+                <div class="text-[10px] tracking-widest text-zinc-500">SCROLL</div>
+                <div class="w-px h-12 bg-gradient-to-b from-transparent via-zinc-400 to-transparent"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Packages Section -->
+    <section id="packages" class="py-24 border-t border-zinc-900">
+        <div class="max-w-screen-2xl mx-auto px-6">
+            <div class="flex justify-between items-end mb-16">
+                <div>
+                    <div class="uppercase text-emerald-400 text-xs tracking-[0.2em] font-mono mb-1">CHOOSE YOUR PATH</div>
+                    <div class="heading-font text-5xl font-semibold tracking-tighter">Our Offerings</div>
+                </div>
+                
+                <div class="hidden md:block text-right">
+                    <div class="text-zinc-500 text-sm">From concept to delivery</div>
+                    <div class="text-amber-400 text-xl font-medium">in as little as 3 days</div>
+                </div>
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-6">
+                <!-- Starter Package -->
+                <div class="package-card group bg-zinc-900 rounded-3xl p-8 border border-zinc-800 hover:border-amber-400/30 relative overflow-hidden">
+                    <div class="absolute top-0 right-0 w-24 h-24 bg-amber-400/10 rounded-full -translate-y-1/3 translate-x-1/3 group-hover:scale-110 transition-transform"></div>
+                    
+                    <div class="-mt-1 mb-6">
+                        <div class="inline-flex items-center gap-x-2 bg-zinc-950 rounded-full px-3 py-1">
+                            <div class="text-amber-400">★</div>
+                            <div class="uppercase text-[10px] font-mono tracking-widest">STARTER</div>
+                        </div>
+                    </div>
+                    
+                    <div class="flex justify-between items-start mb-8">
+                        <div>
+                            <div class="text-4xl font-semibold">$120</div>
+                            <div class="text-zinc-500 text-sm mt-0.5">one-time</div>
+                        </div>
+                        <div class="text-right">
+                            <div class="text-emerald-400 text-sm font-medium">3 DAYS</div>
+                            <div class="text-[10px] text-zinc-500">DELIVERY</div>
+                        </div>
+                    </div>
+                    
+                    <div class="space-y-4 mb-10">
+                        <div class="flex gap-x-4">
+                            <div class="shrink-0 w-7 h-7 rounded-xl bg-zinc-800 flex items-center justify-center">
+                                <span class="text-amber-400 text-lg">✦</span>
+                            </div>
+                            <div>
+                                <div class="font-medium">AI Logo Concept</div>
+                                <div class="text-zinc-500 text-sm">2 initial directions</div>
+                            </div>
+                        </div>
+                        <div class="flex gap-x-4">
+                            <div class="shrink-0 w-7 h-7 rounded-xl bg-zinc-800 flex items-center justify-center">
+                                <span class="text-emerald-400 text-lg">✦</span>
+                            </div>
+                            <div>
+                                <div class="font-medium">Basic Brand Mark</div>
+                                <div class="text-zinc-500 text-sm">Vector + usage guide</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <button onclick="scrollToOrder()" class="w-full py-4 border border-zinc-700 hover:border-amber-400 text-sm font-medium rounded-2xl transition-colors group-hover:bg-amber-400 group-hover:text-zinc-950">
+                        SELECT STARTER
+                    </button>
+                    
+                    <div class="absolute -bottom-px left-1/2 -translate-x-1/2 h-px w-16 bg-gradient-to-r from-transparent via-amber-400 to-transparent"></div>
+                </div>
+
+                <!-- Pro Package -->
+                <div class="package-card group bg-zinc-900 rounded-3xl p-8 border border-emerald-400/30 relative overflow-hidden scale-[1.02] shadow-2xl">
+                    <div class="absolute -top-3 -right-3 bg-emerald-400 text-zinc-950 text-[10px] font-bold uppercase tracking-widest px-5 py-1 rounded-bl-3xl">RECOMMENDED</div>
+                    
+                    <div class="-mt-1 mb-6">
+                        <div class="inline-flex items-center gap-x-2 bg-zinc-950 rounded-full px-3 py-1">
+                            <div class="text-emerald-400">◆</div>
+                            <div class="uppercase text-[10px] font-mono tracking-widest">PRO</div>
+                        </div>
+                    </div>
+                    
+                    <div class="flex justify-between items-start mb-8">
+                        <div>
+                            <div class="text-4xl font-semibold">$300</div>
+                            <div class="text-zinc-500 text-sm mt-0.5">one-time</div>
+                        </div>
+                        <div class="text-right">
+                            <div class="text-emerald-400 text-sm font-medium">7 DAYS</div>
+                            <div class="text-[10px] text-zinc-500">DELIVERY</div>
+                        </div>
+                    </div>
+                    
+                    <div class="space-y-4 mb-10">
+                        <div class="flex gap-x-4">
+                            <div class="shrink-0 w-7 h-7 rounded-xl bg-zinc-800 flex items-center justify-center">
+                                <span class="text-emerald-400 text-xl">◆</span>
+                            </div>
+                            <div>
+                                <div class="font-medium">Complete Brand System</div>
+                                <div class="text-zinc-500 text-sm">Logo suite + guidelines</div>
+                            </div>
+                        </div>
+                        <div class="flex gap-x-4">
+                            <div class="shrink-0 w-7 h-7 rounded-xl bg-zinc-800 flex items-center justify-center">
+                                <span class="text-emerald-400 text-xl">◆</span>
+                            </div>
+                            <div>
+                                <div class="font-medium">UI Design System</div>
+                                <div class="text-zinc-500 text-sm">6 key interface mocks</div>
+                            </div>
+                        </div>
+                        <div class="flex gap-x-4">
+                            <div class="shrink-0 w-7 h-7 rounded-xl bg-zinc-800 flex items-center justify-center">
+                                <span class="text-emerald-400 text-xl">◆</span>
+                            </div>
+                            <div>
+                                <div class="font-medium">AI Visual Explorations</div>
+                                <div class="text-zinc-500 text-sm">5 rendered directions</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <button onclick="scrollToOrder()" class="w-full py-4 bg-emerald-400 hover:bg-emerald-300 transition-colors text-zinc-950 font-medium rounded-2xl">
+                        SELECT PRO
+                    </button>
+                    
+                    <div class="absolute -bottom-px left-1/2 -translate-x-1/2 h-px w-20 bg-gradient-to-r from-transparent via-emerald-400 to-transparent"></div>
+                </div>
+
+                <!-- Custom Package -->
+                <div class="package-card group bg-zinc-900 rounded-3xl p-8 border border-zinc-800 hover:border-zinc-600 relative overflow-hidden">
+                    <div class="-mt-1 mb-6">
+                        <div class="inline-flex items-center gap-x-2 bg-zinc-950 rounded-full px-3 py-1">
+                            <div class="text-rose-400">✧</div>
+                            <div class="uppercase text-[10px] font-mono tracking-widest">CUSTOM</div>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-8">
+                        <div class="text-4xl font-semibold">Bespoke</div>
+                        <div class="text-emerald-400 text-sm">Let's converse first</div>
+                    </div>
+                    
+                    <div class="space-y-3 mb-12 text-sm text-zinc-400">
+                        <div>Private studio sessions</div>
+                        <div>Unlimited iterations</div>
+                        <div>Extended brand ecosystem</div>
+                        <div>White glove delivery</div>
+                    </div>
+                    
+                    <button onclick="scrollToOrder()" class="w-full py-4 border border-zinc-700 hover:border-rose-400 text-sm font-medium rounded-2xl transition-colors group-hover:bg-zinc-800">
+                        BEGIN DISCUSSION
+                    </button>
+                    
+                    <div class="absolute bottom-6 right-6 text-zinc-700 text-[120px] font-black heading-font opacity-10">✧</div>
+                </div>
+            </div>
+
+            <div class="mt-10 text-center text-zinc-500 text-xs flex items-center justify-center gap-x-4">
+                <div>ALL WORK COPYRIGHT VESPERA STUDIO 2024</div>
+                <div class="h-px w-4 bg-zinc-800"></div>
+                <div>NO SUBSCRIPTIONS • NO HIDDEN FEES</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features / Benefits Section -->
+    <section id="features" class="bg-zinc-900 py-24">
+        <div class="max-w-screen-2xl mx-auto px-6">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-16">
+                <div class="lg:col-span-5">
+                    <div class="sticky top-24">
+                        <div class="uppercase tracking-widest text-emerald-400 text-xs font-mono">THE PROCESS</div>
+                        <div class="heading-font text-[52px] leading-none font-semibold mt-3 tracking-tighter">Elegance<br>meets<br>efficiency</div>
+                        
+                        <div class="mt-8 max-w-xs text-zinc-400">
+                            Every project is treated as a private commission.
+                            AI augments the human hand. Results are timeless.
+                        </div>
+                        
+                        <div class="mt-12 flex gap-3">
+                            <div class="px-4 py-2 bg-zinc-950 rounded-2xl border border-zinc-800 flex-1">
+                                <div class="text-emerald-400 text-xs">01</div>
+                                <div class="font-medium text-sm">BRIEF</div>
+                            </div>
+                            <div class="px-4 py-2 bg-zinc-950 rounded-2xl border border-zinc-800 flex-1">
+                                <div class="text-emerald-400 text-xs">02</div>
+                                <div class="font-medium text-sm">AI SYNTHESIS</div>
+                            </div>
+                            <div class="px-4 py-2 bg-zinc-950 rounded-2xl border border-zinc-800 flex-1">
+                                <div class="text-emerald-400 text-xs">03</div>
+                                <div class="font-medium text-sm">HUMAN FINISH</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="lg:col-span-7">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="benefit group bg-zinc-950 p-8 rounded-3xl border-l-4 border-emerald-400 hover:border-amber-400 transition-colors">
+                            <div class="benefit-icon w-12 h-12 mb-6 flex items-center justify-center bg-zinc-900 rounded-2xl">
+                                <span class="text-2xl">⟡</span>
+                            </div>
+                            <div class="font-medium mb-1">Precision Typography</div>
+                            <div class="text-zinc-400 text-[15px]">Hand tuned type systems that breathe on every screen size</div>
+                        </div>
+                        
+                        <div class="benefit group bg-zinc-950 p-8 rounded-3xl border-l-4 border-amber-400 hover:border-emerald-400 transition-colors">
+                            <div class="benefit-icon w-12 h-12 mb-6 flex items-center justify-center bg-zinc-900 rounded-2xl">
+                                <span class="text-2xl">🜁</span>
+                            </div>
+                            <div class="font-medium mb-1">Living Color Systems</div>
+                            <div class="text-zinc-400 text-[15px]">Dynamic palettes that shift with mood and context</div>
+                        </div>
+                        
+                        <div class="benefit group bg-zinc-950 p-8 rounded-3xl border-l-4 border-emerald-400 hover:border-amber-400 transition-colors">
+                            <div class="benefit-icon w-12 h-12 mb-6 flex items-center justify-center bg-zinc-900 rounded-2xl">
+                                <span class="text-2xl">🜂</span>
+                            </div>
+                            <div class="font-medium mb-1">Motion Language</div>
+                            <div class="text-zinc-400 text-[15px]">Delicate micro-animations that feel like silk</div>
+                        </div>
+                        
+                        <div class="benefit group bg-zinc-950 p-8 rounded-3xl border-l-4 border-amber-400 hover:border-emerald-400 transition-colors">
+                            <div class="benefit-icon w-12 h-12 mb-6 flex items-center justify-center bg-zinc-900 rounded-2xl">
+                                <span class="text-2xl">🜔</span>
+                            </div>
+                            <div class="font-medium mb-1">Interface Alchemy</div>
+                            <div class="text-zinc-400 text-[15px]">Interfaces so intuitive your users think they designed them</div>
+                        </div>
+                        
+                        <div class="benefit group bg-zinc-950 p-8 rounded-3xl border-l-4 border-emerald-400 hover:border-amber-400 transition-colors">
+                            <div class="benefit-icon w-12 h-12 mb-6 flex items-center justify-center bg-zinc-900 rounded-2xl">
+                                <span class="text-2xl">🜨</span>
+                            </div>
+                            <div class="font-medium mb-1">Fast Turnaround</div>
+                            <div class="text-zinc-400 text-[15px]">Rapid iteration cycles with same day feedback loops</div>
+                        </div>
+                        
+                        <div class="benefit group bg-zinc-950 p-8 rounded-3xl border-l-4 border-amber-400 hover:border-emerald-400 transition-colors">
+                            <div class="benefit-icon w-12 h-12 mb-6 flex items-center justify-center bg-zinc-900 rounded-2xl">
+                                <span class="text-2xl">🜍</span>
+                            </div>
+                            <div class="font-medium mb-1">Future Proof</div>
+                            <div class="text-zinc-400 text-[15px]">Designs that evolve as your business does</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Trust / Proof Section -->
+    <section id="trust" class="py-24 border-t border-b border-zinc-900">
+        <div class="max-w-screen-2xl mx-auto px-6">
+            <div class="flex flex-col lg:flex-row gap-16 lg:gap-24">
+                <!-- Logos -->
+                <div class="lg:w-5/12">
+                    <div class="uppercase text-amber-400 font-mono text-xs tracking-widest mb-4">CLIENT ARCHIVE</div>
+                    <div class="heading-font text-6xl font-light tracking-tighter leading-none">Past<br>Patrons</div>
+                    
+                    <div class="mt-12 grid grid-cols-2 md:grid-cols-3 gap-x-12 gap-y-10">
+                        <div class="group">
+                            <div class="h-14 flex items-center justify-center opacity-40 group-hover:opacity-100 transition-opacity">
+                                <div class="font-serif italic text-3xl tracking-tighter">AURELIA</div>
+                            </div>
+                            <div class="h-px w-full bg-gradient-to-r from-transparent via-amber-400/30 to-transparent mt-3"></div>
+                            <div class="text-center text-[10px] text-zinc-500 mt-1.5">WATCHES • GENEVA</div>
+                        </div>
+                        
+                        <div class="group">
+                            <div class="h-14 flex items-center justify-center opacity-40 group-hover:opacity-100 transition-opacity">
+                                <div class="font-serif italic text-3xl tracking-tighter">LUNARA</div>
+                            </div>
+                            <div class="h-px w-full bg-gradient-to-r from-transparent via-emerald-400/30 to-transparent mt-3"></div>
+                            <div class="text-center text-[10px] text-zinc-500 mt-1.5">WINES • TUSCANY</div>
+                        </div>
+                        
+                        <div class="group">
+                            <div class="h-14 flex items-center justify-center opacity-40 group-hover:opacity-100 transition-opacity">
+                                <div class="uppercase font-mono text-xl tracking-widest">VLT</div>
+                            </div>
+                            <div class="h-px w-full bg-gradient-to-r from-transparent via-amber-400/30 to-transparent mt-3"></div>
+                            <div class="text-center text-[10px] text-zinc-500 mt-1.5">PRIVATE BANK • ZURICH</div>
+                        </div>
+                        
+                        <div class="group">
+                            <div class="h-14 flex items-center justify-center opacity-40 group-hover:opacity-100 transition-opacity">
+                                <div class="font-serif italic text-2xl">SAVILE</div>
+                            </div>
+                            <div class="h-px w-full bg-gradient-to-r from-transparent via-emerald-400/30 to-transparent mt-3"></div>
+                            <div class="text-center text-[10px] text-zinc-500 mt-1.5">TAILORING • LONDON</div>
+                        </div>
+                        
+                        <div class="group">
+                            <div class="h-14 flex items-center justify-center opacity-40 group-hover:opacity-100 transition-opacity">
+                                <div class="font-mono text-2xl">E•L•E•V</div>
+                            </div>
+                            <div class="h-px w-full bg-gradient-to-r from-transparent via-amber-400/30 to-transparent mt-3"></div>
+                            <div class="text-center text-[10px] text-zinc-500 mt-1.5">RESORTS • MALDIVES</div>
+                        </div>
+                        
+                        <div class="group">
+                            <div class="h-14 flex items-center justify-center opacity-40 group-hover:opacity-100 transition-opacity">
+                                <div class="font-serif text-4xl">NOIR</div>
+                            </div>
+                            <div class="h-px w-full bg-gradient-to-r from-transparent via-emerald-400/30 to-transparent mt-3"></div>
+                            <div class="text-center text-[10px] text-zinc-500 mt-1.5">COGNAC • COGNAC</div>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-16 border-l-2 border-amber-400 pl-6">
+                        <div class="text-xs uppercase tracking-widest text-zinc-500">WORKING WITH</div>
+                        <div class="text-lg font-medium">10+ INTERNATIONAL HOUSES</div>
+                        <div class="text-zinc-400 mt-1">IN THE PAST 24 MONTHS</div>
+                    </div>
+                </div>
+
+                <!-- Testimonials -->
+                <div class="lg:w-7/12">
+                    <div class="uppercase text-emerald-400 font-mono text-xs tracking-widest mb-5">WORDS FROM CLIENTS</div>
+                    
+                    <div id="testimonials-container" class="space-y-16">
+                        <div class="testimonial bg-zinc-950 p-9 rounded-3xl border border-zinc-800">
+                            <div class="flex gap-x-4 mb-6">
+                                <div class="w-14 h-14 bg-zinc-800 rounded-2xl flex-none"></div>
+                                <div>
+                                    <div class="font-medium">Elena Voss</div>
+                                    <div class="text-zinc-500">Director of Design, Lunara Estates</div>
+                                </div>
+                            </div>
+                            <div class="italic text-lg">"The AI explorations were nothing short of alchemy. Our new identity feels like it was waiting in the archives for a century."</div>
+                            <div class="mt-4 text-amber-400 text-xs">— DELIVERED IN 6 DAYS</div>
+                        </div>
+                        
+                        <div class="testimonial bg-zinc-950 p-9 rounded-3xl border border-zinc-800">
+                            <div class="flex gap-x-4 mb-6">
+                                <div class="w-14 h-14 bg-zinc-800 rounded-2xl flex-none"></div>
+                                <div>
+                                    <div class="font-medium">Marcus Hale</div>
+                                    <div class="text-zinc-500">Partner, VLT Private Bank</div>
+                                </div>
+                            </div>
+                            <div class="italic text-lg">"Discreet, fast, and masterful. Our digital presence now matches the prestige of our private rooms."</div>
+                            <div class="mt-4 text-amber-400 text-xs">— FULL BRAND REFRESH</div>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-12 flex gap-3 items-center">
+                        <button onclick="prevTestimonial()" class="w-11 h-11 flex items-center justify-center bg-zinc-900 rounded-full border border-zinc-800 hover:border-zinc-600 transition-colors">
+                            ←
+                        </button>
+                        <button onclick="nextTestimonial()" class="w-11 h-11 flex items-center justify-center bg-zinc-900 rounded-full border border-zinc-800 hover:border-zinc-600 transition-colors">
+                            →
+                        </button>
+                        <div class="ml-auto text-zinc-500 text-xs">SCROLL FOR MORE</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Final CTA / Order Form Section -->
+    <section id="order" class="py-24 bg-gradient-to-b from-zinc-950 to-black relative">
+        <div class="max-w-screen-2xl mx-auto px-6 grid lg:grid-cols-12 gap-16">
+            <!-- Left Content -->
+            <div class="lg:col-span-5">
+                <div class="max-w-md">
+                    <div class="uppercase font-mono text-emerald-400 tracking-[4px] text-xs">PRIVATE STUDIO ACCESS</div>
+                    
+                    <div class="heading-font text-[58px] leading-[1.05] font-semibold mt-4 tracking-tighter">Begin Your<br>Commission</div>
+                    
+                    <div class="mt-8 text-zinc-400 text-[15px] leading-relaxed">
+                        Whether you're launching a new legacy house or refreshing an established one, our studio is ready to craft something extraordinary for you.
+                    </div>
+                    
+                    <div class="mt-10 grid grid-cols-3 gap-px bg-zinc-800 p-px rounded-3xl overflow-hidden">
+                        <div class="bg-zinc-950 p-5">
+                            <div class="text-amber-400 font-mono text-xs">24</div>
+                            <div class="text-[11px] text-zinc-500">HOUR RESPONSE</div>
+                        </div>
+                        <div class="bg-zinc-950 p-5">
+                            <div class="text-emerald-400 font-mono text-xs">7</div>
+                            <div class="text-[11px] text-zinc-500">DAY DELIVERY</div>
+                        </div>
+                        <div class="bg-zinc-950 p-5">
+                            <div class="text-amber-400 font-mono text-xs">∞</div>
+                            <div class="text-[11px] text-zinc-500">ITERATIONS</div>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-16 hidden lg:block">
+                        <div class="-rotate-2 bg-zinc-900 border border-zinc-700 p-6 rounded-3xl">
+                            <div class="text-xs uppercase font-medium tracking-wider mb-3 text-zinc-500">LAST PROJECT</div>
+                            <div class="font-medium">Private island resort identity for ELEV Maldives</div>
+                            <div class="text-emerald-400 text-xs mt-4">COMPLETED 11 DAYS AGO</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Form -->
+            <div class="lg:col-span-7">
+                <div class="bg-zinc-900 rounded-[2rem] p-10 lg:p-14 border border-zinc-800">
+                    <form id="order-form" class="space-y-8" action="https://formspree.io/f/xojjqznq" method="post";>
+                        <div>
+                            <label class="block uppercase text-zinc-500 text-xs tracking-widest font-medium mb-2">YOUR NAME</label>
+                            <input type="text" id="name" name="name" class="form-input w-full bg-transparent border-b border-zinc-700 focus:border-amber-400 py-3 text-lg placeholder:text-zinc-600" placeholder="Alessandro Conti" required>
+                        </div>
+                        
+                        <div class="grid grid-cols-2 gap-8">
+                            <div>
+                                <label class="block uppercase text-zinc-500 text-xs tracking-widest font-medium mb-2">EMAIL ADDRESS</label>
+                                <input type="email" id="email" name="email" class="form-input w-full bg-transparent border-b border-zinc-700 focus:border-amber-400 py-3 text-lg placeholder:text-zinc-600" placeholder="studio@vespera.art" required>
+                            </div>
+                            <div>
+                                <label class="block uppercase text-zinc-500 text-xs tracking-widest font-medium mb-2">PREFERRED PACKAGE</label>
+                                <select id="package" name="package" class="form-input w-full bg-transparent border-b border-zinc-700 focus:border-amber-400 py-3 text-lg appearance-none">
+                                    <option value="">Select one...</option>
+                                    <option value="Starter">Starter • $120</option>
+                                    <option value="Pro">Pro • $300</option>
+                                    <option value="Custom">Custom Atelier</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <label class="block uppercase text-zinc-500 text-xs tracking-widest font-medium mb-2">PROJECT BRIEF</label>
+                            <textarea id="message" name="message" rows="4" class="form-input w-full bg-transparent border-b border-zinc-700 focus:border-amber-400 py-3 text-lg placeholder:text-zinc-600 resize-y min-h-[88px]" placeholder="We are launching a new line of Italian leather goods..."></textarea>
+                        </div>
+                        
+                        <button type="submit" id="submit-btn" class="mt-4 w-full py-5 bg-gradient-to-r from-amber-400 to-emerald-400 text-zinc-950 rounded-2xl font-medium flex items-center justify-center gap-x-3 group">
+                            <span>SEND TO STUDIO</span>
+                            
+                        </button>
+                        
+                        <div class="text-[10px] text-center text-zinc-500 pt-3">YOUR INFORMATION IS SACRED AND WILL BE TREATED AS SUCH</div>
+                    </form>
+
+                    <!-- Success Message (hidden) -->
+                    <div id="success-message" class="hidden py-12 text-center">
+                        <div class="mx-auto w-16 h-16 rounded-full bg-emerald-400/10 flex items-center justify-center mb-6">
+                            <div class="text-emerald-400 text-4xl">🜂</div>
+                        </div>
+                        <div class="heading-font text-2xl mb-1">Thank you.</div>
+                        <div class="text-zinc-400">We will respond within the day.</div>
+                        
+                        <div class="mt-10 text-xs uppercase tracking-widest text-zinc-500">STUDIO NOTES</div>
+                        <div class="text-emerald-400 mt-1">Your request has been added to the ledger.</div>
+                    </div>
+                </div>
+                
+                <div class="text-center mt-8 text-zinc-500 text-xs flex items-center justify-center gap-x-6">
+                    <div>SECURE FORM</div>
+                    <div>ENCRYPTED</div>
+                    <div>CONFIDENTIAL</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-black py-16 border-t border-zinc-900">
+        <div class="max-w-screen-2xl mx-auto px-6 text-zinc-500 text-xs flex flex-col md:flex-row gap-y-8 md:gap-y-0 items-center md:justify-between">
+            <div>© VESPERA ATELIER 2024 • ALL RIGHTS PRESERVED</div>
+            
+            <div class="flex gap-x-8">
+                <div>PRIVACY</div>
+                <div>TERMS</div>
+                <div>CONTACT</div>
+            </div>
+            
+            <div class="flex gap-x-4">
+                <div>INSTAGRAM</div>
+                <div>PINTEREST</div>
+                <div>ARE.NA</div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Persistent CTA -->
+    <div onclick="scrollToOrder()" class="fixed-cta hidden lg:flex bottom-8 right-8 bg-amber-400 text-zinc-950 px-8 py-4 rounded-2xl items-center gap-x-3 shadow-2xl cursor-pointer hover:shadow-amber-400/50 z-30">
+        <div>ORDER NOW</div>
+        <div class="w-px h-5 bg-zinc-800/50"></div>
+        <div class="text-xs uppercase tracking-widest font-medium">STARTS AT $120</div>
+    </div>
+
+    <!-- Mobile Bottom CTA -->
+    <div onclick="scrollToOrder()" class="fixed lg:hidden bottom-6 left-1/2 -translate-x-1/2 bg-amber-400 text-zinc-950 px-9 py-3 rounded-full items-center gap-x-2 shadow-xl z-30 flex">
+        <div>ORDER NOW</div>
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="4" d="M14 5l7 7-7 7M5 12h14" />
+        </svg>
+    </div>
+
+    <script>
+        // Mobile menu toggle
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobile-menu')
+            menu.classList.toggle('hidden')
+            
+            // Simple animation for menu items
+            const links = menu.querySelectorAll('a')
+            links.forEach((link, i) => {
+                link.style.transitionDelay = `${i * 50}ms`
+                link.style.opacity = menu.classList.contains('hidden') ? '0' : '1'
+                link.style.transform = menu.classList.contains('hidden') ? 'translateY(10px)' : 'translateY(0)'
+            })
+        }
+
+        // Scroll to order section
+        function scrollToOrder() {
+            document.getElementById('order').scrollIntoView({
+                behavior: 'smooth',
+                block: 'start'
+            })
+        }
+
+        // Form handling
+        const form = document.getElementById('order-form')
+        const success = document.getElementById('success-message')
+        const submitBtn = document.getElementById('submit-btn')
+
+        form.addEventListener('submit', function(e) {
+            e.preventDefault()
+            
+            // Fake loading
+            submitBtn.innerHTML = `
+                <svg class="animate-spin h-4 w-4 text-zinc-950" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3 1.366z"></path>
+                </svg>
+            `
+            
+            setTimeout(() => {
+                form.classList.add('hidden')
+                success.classList.remove('hidden')
+                
+                // Auto hide success after 4 seconds
+                setTimeout(() => {
+                    success.classList.add('hidden')
+                    form.classList.remove('hidden')
+                    form.reset()
+                    
+                    submitBtn.innerHTML = `
+                        <span>SEND TO STUDIO</span>
+                        <div class="group-hover:rotate-45 transition-transform">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M14 5l7 7m0 0l-7 7m7-7V12" />
+                            </svg>
+                        </div>
+                    `
+                }, 4000)
+            }, 1200)
+        })
+
+        // Testimonials slider (simple)
+        let currentTestimonial = 0
+        const testimonials = document.querySelectorAll('.testimonial')
+
+        function showTestimonial(index) {
+            testimonials.forEach((t, i) => {
+                if (i === index) {
+                    t.classList.add('visible')
+                } else {
+                    t.classList.remove('visible')
+                }
+            })
+        }
+
+        // Initialize first testimonial
+        setTimeout(() => {
+            testimonials[0].classList.add('visible')
+        }, 800)
+
+        function nextTestimonial() {
+            currentTestimonial = (currentTestimonial + 1) % testimonials.length
+            showTestimonial(currentTestimonial)
+        }
+
+        function prevTestimonial() {
+            currentTestimonial = (currentTestimonial - 1 + testimonials.length) % testimonials.length
+            showTestimonial(currentTestimonial)
+        }
+
+        // Scroll progress bar
+        window.addEventListener('scroll', () => {
+            const winScroll = document.body.scrollTop || document.documentElement.scrollTop
+            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight
+            const scrolled = (winScroll / height) * 100
+            
+            document.getElementById('scroll-progress').style.width = scrolled + '%'
+        })
+
+        // Keyboard escape for mobile menu
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                const menu = document.getElementById('mobile-menu')
+                if (!menu.classList.contains('hidden')) {
+                    toggleMobileMenu()
+                }
+            }
+        })
+    </script>
+</body>
+</html>
+```
